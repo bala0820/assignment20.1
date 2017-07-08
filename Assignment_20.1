@@ -1,0 +1,41 @@
+mysql -u root -p
+
+cloudera
+
+create table emp
+(
+id int not null primary key,
+name varchar(50)
+);
+
+
+Move the emp data into HDFS using Put command 
+
+hadoop fs -put /home/cloudera/Desktop/Projects/Sqoop/emp.txt /user/cloudera/consumerdata
+
+export the emp data into mysql using Sqoop export
+
+sqoop export --connect jdbc:mysql://localhost/sqoopdb1 \
+--username root \
+--password cloudera \
+--table emp \
+--export-dir /user/cloudera/emp.txt \
+--input-fields-terminated-by ',';
+
+Modify the emp data and move the same into HDFS 
+
+Now again mov ethe data to Mysql using Sqoop upsert command
+
+sqoop export --connect jdbc:mysql://localhost/sqoopdb1 \
+--username root \
+--password cloudera \
+--table emp \
+--update-mode allowinsert \
+--update-key id \
+--export-dir /user/cloudera/consumerdata \
+--input-fields-terminated-by ',';
+
+
+
+
+
